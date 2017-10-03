@@ -7,6 +7,9 @@
 import sys
 
 # Conway's life
+# Si una celda muerta está rodeada exactamente por 3 celdas vivas, pasa al estado viva.
+# Si una celda viva no está rodeada por 2 o 3 celdas vivas, pasa al estado muerta.
+# En cualquier otro caso la celda no cambia de estado
 
 
 class Aplicacion():
