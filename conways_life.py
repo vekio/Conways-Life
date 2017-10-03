@@ -21,6 +21,8 @@ class Aplicacion():
         self.iteraciones = sys.argv[2]
         self.matriz = self.leer_fichero()
 
+        self.main()
+
     def leer_fichero(self):
         # Lee el fichero introducido por el usuario
         try:
@@ -35,6 +37,15 @@ class Aplicacion():
         finally:
             fichero.close()
             print("--> Lectura de {} correcta.").format(self.fichero)
+    def main(self):
+        """Metodo principal del programa."""
+        for x in self.iteraciones:
+            self.cambios()
+
+    def cambios(self):
+        """Aplica las reglas del juego para modificar de viva o muerta las
+        celdas de la matriz"""
+
 
 
 if __name__ == "__main__":
