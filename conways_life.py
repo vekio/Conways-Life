@@ -27,16 +27,27 @@ class Aplicacion():
         # Lee el fichero introducido por el usuario
         try:
             fichero = open(self.fichero, "r")
-        except IOError:
-            raise IOError("No se encuentra '{}'").format(self.fichero)
+        except OSError:
+            sys.exit("No se encuentra '{}'".format(self.fichero))
         else:
             f = [linea.strip() for linea in fichero]
             self.filas = int(f[0])
             self.columnas = int(f[1])
             self.matriz = [list(linea) for linea in f[2:]]
-        finally:
+            # filas con celdas muertas arriba y debajo del dibujo
+            self.matriz.insert(0, ["."] * self.columnas)
+            self.matriz.insert(self.filas + 1, ["."] * self.columnas)
+            # columnas con celdas muertas a izquierda y derecha del dibujo
+            for fila in self.matriz:
+                fila.insert(0, ".")
+                fila.insert(self.columnas + 1, ".")
+
+            #for fila in self.matriz:
+            #  print(fila)
+
             fichero.close()
-            print("--> Lectura de {} correcta.").format(self.fichero)
+            print("--> Lectura de {} correcta.".format(self.fichero))
+
     def main(self):
         """Metodo principal del programa."""
         for x in self.iteraciones:
