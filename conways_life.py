@@ -50,8 +50,16 @@ class Aplicacion():
 
     def main(self):
         """Metodo principal del programa."""
-        for x in self.iteraciones:
-            self.cambios()
+        matriz_aux = [(["."] * (self.columnas)) for i in range(self.filas)]
+        # print(self.matriz_aux)
+        # print(self.matriz)
+        # print(len(self.matriz[0]))
+        # print(self.filas)
+        for x in range(self.iteraciones):
+            self.limites()
+            self.matriz = self.cambios(matriz_aux)
+            # for fila in self.matriz:
+            #    print(fila)
 
     def cambios(self, matriz_aux):
         """Aplica las reglas del juego para modificar de viva o muerta las
