@@ -10,16 +10,21 @@ import sys
 # Si una celda muerta está rodeada exactamente por 3 celdas vivas, pasa al estado viva.
 # Si una celda viva no está rodeada por 2 o 3 celdas vivas, pasa al estado muerta.
 # En cualquier otro caso la celda no cambia de estado
+# Filas n
+# Columnas m
+
+viva = "X"
+muerta = "."
 
 
 class Aplicacion():
     """Clase Aplicacion del juego Conway's Life"""
     def __init__(self):
-        self.filas = 0      # n
-        self.columnas = 0   # m
         self.fichero = sys.argv[1]
-        self.iteraciones = sys.argv[2]
-        self.matriz = self.leer_fichero()
+        self.iteraciones = int(sys.argv[2])
+        self.filas_reales, self.columnas_reales, self.matriz = self.leer_fichero()
+        self.filas = self.filas_reales + 4
+        self.columnas = self.columnas_reales + 4
 
         self.main()
 
@@ -31,22 +36,28 @@ class Aplicacion():
             sys.exit("No se encuentra '{}'".format(self.fichero))
         else:
             f = [linea.strip() for linea in fichero]
-            self.filas = int(f[0])
-            self.columnas = int(f[1])
-            self.matriz = [list(linea) for linea in f[2:]]
-            # filas con celdas muertas arriba y debajo del dibujo
-            self.matriz.insert(0, ["."] * self.columnas)
-            self.matriz.insert(self.filas + 1, ["."] * self.columnas)
-            # columnas con celdas muertas a izquierda y derecha del dibujo
-            for fila in self.matriz:
-                fila.insert(0, ".")
-                fila.insert(self.columnas + 1, ".")
+            filas = int(f[0])
+            columnas = int(f[1])
+            matriz = [list(linea) for linea in f[2:]]
 
-            #for fila in self.matriz:
-            #  print(fila)
+            # 2 filas con celdas muertas arriba y debajo del dibujo
+
+            matriz.insert(0, ["."] * columnas)
+            matriz.insert(filas + 1, ["."] * columnas)
+            matriz.insert(0, ["."] * columnas)
+            matriz.insert(filas + 2, ["."] * columnas)
+
+            # 2 columnas con celdas muertas a izquierda y derecha del dibujo
+            for fila in matriz:
+                fila.insert(0, ".")
+                fila.insert(columnas + 1, ".")
+                fila.insert(0, ".")
+                fila.insert(columnas + 2, ".")
 
             fichero.close()
             print("--> Lectura de {} correcta.".format(self.fichero))
+
+            return filas, columnas, matriz
 
     def main(self):
         """Metodo principal del programa."""
