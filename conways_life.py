@@ -209,8 +209,8 @@ class Aplicacion():
     def get_celdas_vivas(self):
         """Devuelve el número de celdas vivas dentro de la matriz"""
         celdas_vivas = 0
-        for n in range(self.filas):
-            for m in range(self.columnas):
+        for n in range(2, self.filas - 2):
+            for m in range(2, self.columnas - 2):
                 if self.matriz[n][m] == viva:
                     celdas_vivas += 1
         return celdas_vivas
