@@ -58,7 +58,7 @@ class Aplicacion():
                 fila.insert(columnas + 2, ".")
 
             fichero.close()
-            print("--> Lectura de {} correcta.".format(self.fichero))
+            # print("--> Lectura de {} correcta.".format(self.fichero))
 
             return filas + 4, columnas + 4, matriz
 
@@ -72,8 +72,9 @@ class Aplicacion():
         for x in range(self.iteraciones):
             self.limites()
             self.matriz = self.cambios(matriz_aux)
-            # for fila in self.matriz:
-            #    print(fila)
+            #for fila in self.matriz:
+            #   print(fila)
+        self.tiempo_final = time()
         self.imprimir()
 
     def cambios(self, matriz_aux):
