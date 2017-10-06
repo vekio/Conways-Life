@@ -5,6 +5,8 @@
 # Jorge Chana - jorchan
 
 import sys
+from time import time
+
 
 # Conway's life
 # Si una celda muerta está rodeada exactamente por 3 celdas vivas, pasa al estado viva.
@@ -20,6 +22,8 @@ muerta = "."
 class Aplicacion():
     """Clase Aplicacion del juego Conway's Life"""
     def __init__(self):
+        self.tiempo_inicial = time()
+        self.tiempo_final = 0
         self.fichero = sys.argv[1]
         self.iteraciones = int(sys.argv[2])
         self.filas, self.columnas, self.matriz = self.leer_fichero()
