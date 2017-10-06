@@ -22,14 +22,13 @@ class Aplicacion():
     def __init__(self):
         self.fichero = sys.argv[1]
         self.iteraciones = int(sys.argv[2])
-        self.filas_reales, self.columnas_reales, self.matriz = self.leer_fichero()
-        self.filas = self.filas_reales + 4
-        self.columnas = self.columnas_reales + 4
+        self.filas, self.columnas, self.matriz = self.leer_fichero()
 
         self.main()
 
     def leer_fichero(self):
-        # Lee el fichero introducido por el usuario
+        """Lee el fichero introducido por el usuario. Añadimos 4 filas y
+        columnas al dibujo original para hacer nuestro algoritmo."""
         try:
             fichero = open(self.fichero, "r")
         except OSError:
@@ -57,7 +56,7 @@ class Aplicacion():
             fichero.close()
             print("--> Lectura de {} correcta.".format(self.fichero))
 
-            return filas, columnas, matriz
+            return filas + 4, columnas + 4, matriz
 
     def main(self):
         """Metodo principal del programa."""
@@ -71,6 +70,7 @@ class Aplicacion():
             self.matriz = self.cambios(matriz_aux)
             # for fila in self.matriz:
             #    print(fila)
+        self.imprimir()
 
     def cambios(self, matriz_aux):
         """Aplica las reglas del juego para modificar de viva o muerta las
@@ -197,9 +197,13 @@ class Aplicacion():
         # print(climites)
 
     def get_filas_reales(self):
+        """Devuelve el número de filas con celdas vivas. Eliminamos
+        las filas extra para el algoritmo"""
         return self.filas - 4
 
     def get_columnas_reales(self):
+        """Devuelve el número de columnas con celdas vivas. Eliminamos
+        las columnas extra para el algoritmo"""
         return self.columnas - 4
 
 
