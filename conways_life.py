@@ -210,6 +210,16 @@ class Aplicacion():
         las columnas extra para el algoritmo"""
         return self.columnas - 4
 
+    def imprimir(self):
+        """Imprime por pantalla los resultados y guarda en un
+        fichero la ultima iteración realizada."""
+        print("{} iteraciones".format(self.iteraciones))
+        print("{} celdas vivas".format(self.get_celdas_vivas()))
+        print("Dimensiones {}x{}".format(self.get_filas_reales(),
+              self.get_columnas_reales()))
+        print("{} segundos".format(self.tiempo_final - self.tiempo_inicial))
+        self.fichero_salida()
+
     def get_celdas_vivas(self):
         """Devuelve el número de celdas vivas dentro de la matriz"""
         celdas_vivas = 0
