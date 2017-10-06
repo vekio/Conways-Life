@@ -206,6 +206,15 @@ class Aplicacion():
         las columnas extra para el algoritmo"""
         return self.columnas - 4
 
+    def get_celdas_vivas(self):
+        """Devuelve el número de celdas vivas dentro de la matriz"""
+        celdas_vivas = 0
+        for n in range(self.filas):
+            for m in range(self.columnas):
+                if self.matriz[n][m] == viva:
+                    celdas_vivas += 1
+        return celdas_vivas
+
 
 if __name__ == "__main__":
     app = Aplicacion()
