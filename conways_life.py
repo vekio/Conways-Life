@@ -196,6 +196,12 @@ class Aplicacion():
         # print(flimites)
         # print(climites)
 
+    def get_filas_reales(self):
+        return self.filas - 4
+
+    def get_columnas_reales(self):
+        return self.columnas - 4
+
 
 if __name__ == "__main__":
     app = Aplicacion()
