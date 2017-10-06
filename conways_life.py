@@ -229,6 +229,21 @@ class Aplicacion():
                     celdas_vivas += 1
         return celdas_vivas
 
+    def fichero_salida(self):
+        """Escribe la ultima iteración en el fichero dado por el usuario"""
+        nombre = input("Escriba el nombre del fichero de salida: ")
+        try:
+            fichero = open(nombre, "w")
+        except OSError:
+            sys.exit("Algo salio mal al guardar '{}'".format(nombre))
+        else:
+            fichero.write(str(self.get_filas_reales()) + "\n")
+            fichero.write(str(self.get_columnas_reales()) + "\n")
+            # modificar eliminar filas columnas muertas
+            for linea in self.matriz:
+                fichero.writelines(linea)
+                fichero.write("\n")
+
 
 if __name__ == "__main__":
     app = Aplicacion()
