@@ -74,51 +74,31 @@ class Aplicacion():
         celdas de la matriz"""
         for n in range(1, self.filas - 1):
             for m in range(1, self.columnas - 1):
+                vivas = 0
+                if self.matriz[n][m - 1] == viva:
+                    vivas += 1
+                if self.matriz[n - 1][m - 1] == viva:
+                    vivas += 1
+                if self.matriz[n - 1][m] == viva:
+                    vivas += 1
+                if self.matriz[n - 1][m + 1] == viva:
+                    vivas += 1
+                if self.matriz[n][m + 1] == viva:
+                    vivas += 1
+                if self.matriz[n + 1][m + 1] == viva:
+                    vivas += 1
+                if self.matriz[n + 1][m] == viva:
+                    vivas += 1
+                if self.matriz[n + 1][m - 1] == viva:
+                    vivas += 1
+
                 if self.matriz[n][m] == muerta:
-                    vivas = 0
-                    if self.matriz[n][m - 1] == viva:
-                        vivas += 1
-                    if self.matriz[n - 1][m - 1] == viva:
-                        vivas += 1
-                    if self.matriz[n - 1][m] == viva:
-                        vivas += 1
-                    if self.matriz[n - 1][m + 1] == viva:
-                        vivas += 1
-                    if self.matriz[n][m + 1] == viva:
-                        vivas += 1
-                    if self.matriz[n + 1][m + 1] == viva:
-                        vivas += 1
-                    if self.matriz[n + 1][m] == viva:
-                        vivas += 1
-                    if self.matriz[n + 1][m - 1] == viva:
-                        vivas += 1
                     if vivas == 3:
                         matriz_aux[n][m] = viva
                 if self.matriz[n][m] == viva:
-                    vivas = 0
-                    matriz_aux[n][m] = viva
-                    if self.matriz[n][m - 1] == viva:
-                        vivas += 1
-                    if self.matriz[n - 1][m - 1] == viva:
-                        vivas += 1
-                    if self.matriz[n - 1][m] == viva:
-                        vivas += 1
-                    if self.matriz[n - 1][m + 1] == viva:
-                        vivas += 1
-                    if self.matriz[n][m + 1] == viva:
-                        vivas += 1
-                    if self.matriz[n + 1][m + 1] == viva:
-                        vivas += 1
-                    if self.matriz[n + 1][m] == viva:
-                        vivas += 1
-                    if self.matriz[n + 1][m - 1] == viva:
-                        vivas += 1
-                    if vivas == 2:
+                    if vivas == 2 or vivas == 3:
                         matriz_aux[n][m] = viva
-                    elif vivas == 3:
-                        matriz_aux[n][m] = viva
-                    else:
-                        matriz_aux[n][m] = muerta
+
         return matriz_aux
 
     def limites(self):
