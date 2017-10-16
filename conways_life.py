@@ -7,7 +7,6 @@
 import sys
 from time import time
 
-
 # Conway's life
 # Si una celda muerta está rodeada exactamente por 3 celdas vivas, pasa al estado viva.
 # Si una celda viva no está rodeada por 2 o 3 celdas vivas, pasa al estado muerta.
@@ -44,7 +43,6 @@ class Aplicacion():
             matriz = [list(linea) for linea in f[2:]]
 
             # 2 filas con celdas muertas arriba y debajo del dibujo
-
             matriz.insert(0, ["."] * columnas)
             matriz.insert(filas + 1, ["."] * columnas)
             matriz.insert(0, ["."] * columnas)
@@ -56,31 +54,24 @@ class Aplicacion():
                 fila.insert(columnas + 1, ".")
                 fila.insert(0, ".")
                 fila.insert(columnas + 2, ".")
-
             fichero.close()
-            # print("--> Lectura de {} correcta.".format(self.fichero))
 
             return filas + 4, columnas + 4, matriz
 
     def main(self):
         """Metodo principal del programa."""
-        matriz_aux = [(["."] * (self.columnas)) for i in range(self.filas)]
-        # print(self.matriz_aux)
-        # print(self.matriz)
-        # print(len(self.matriz[0]))
-        # print(self.filas)
+        self.tiempo_inicial = time()
         for x in range(self.iteraciones):
             self.limites()
+            matriz_aux = [(["."] * (self.columnas)) for i in range(self.filas)]
             self.matriz = self.cambios(matriz_aux)
-            #for fila in self.matriz:
-            #   print(fila)
         self.tiempo_final = time()
+        self.limites()
         self.imprimir()
 
     def cambios(self, matriz_aux):
         """Aplica las reglas del juego para modificar de viva o muerta las
         celdas de la matriz"""
-        # print(self.matriz)
         for n in range(1, self.filas - 1):
             for m in range(1, self.columnas - 1):
                 if self.matriz[n][m] == muerta:
@@ -128,8 +119,6 @@ class Aplicacion():
                         matriz_aux[n][m] = viva
                     else:
                         matriz_aux[n][m] = muerta
-
-        # print(matriz_aux)
         return matriz_aux
 
     def limites(self):
@@ -148,8 +137,6 @@ class Aplicacion():
                     climites[m] = True
                     break
 
-        # print(flimites)
-        # print(climites)
         # Comprobamos que no haya mas de 2 False al principio y final de la
         # listas flimites y climites
         if flimites.index(True) == 2:
@@ -198,9 +185,6 @@ class Aplicacion():
                     fila.pop(self.columnas - 1)
                 self.columnas -= 1
 
-        # print(flimites)
-        # print(climites)
-
     def get_filas_reales(self):
         """Devuelve el número de filas con celdas vivas. Eliminamos
         las filas extra para el algoritmo"""
@@ -218,7 +202,7 @@ class Aplicacion():
         print("{} celdas vivas".format(self.get_celdas_vivas()))
         print("Dimensiones {}x{}".format(self.get_filas_reales(),
               self.get_columnas_reales()))
-        print("{} segundos".format(self.tiempo_final - self.tiempo_inicial))
+        print("{:.2f} segundos".format(self.tiempo_final - self.tiempo_inicial))
         self.fichero_salida()
 
     def get_celdas_vivas(self):
@@ -239,11 +223,12 @@ class Aplicacion():
             sys.exit("Algo salio mal al guardar '{}'".format(nombre))
         else:
             fichero.write(str(self.get_filas_reales()) + "\n")
-            fichero.write(str(self.get_columnas_reales()) + "\n")
-            # modificar eliminar filas columnas muertas
-            for linea in self.matriz:
-                fichero.writelines(linea)
+            fichero.write(str(self.get_columnas_reales()))
+            for n in range(2, self.filas - 2):
                 fichero.write("\n")
+                for m in range(2, self.columnas - 2):
+                    fichero.write(self.matriz[n][m])
+            fichero.close()
 
 
 if __name__ == "__main__":
