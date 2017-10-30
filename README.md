@@ -1,2 +1,2 @@
 # Conways-Life
-Práctica 1 EDA - UVA
+Práctica 1 EDA
