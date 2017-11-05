@@ -1,2 +1,2 @@
 # Conways-Life
-Práctica 1 EDA
+Version 1.0 - Práctica 1 EDA
