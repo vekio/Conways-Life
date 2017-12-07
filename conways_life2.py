@@ -16,13 +16,17 @@ class Aplicacion():
         self.fichero = sys.argv[1]
         self.iteraciones = int(sys.argv[2])
         self.matriz = self.leer_fichero()
+        self.cua = 0
         # print(len(self.matriz))
+        # print(self.matriz)
+        for line in self.matriz:
+            print(line)
         self.main()
 
     def main(self):
         nivel_raiz = int(pow(len(self.matriz), 0.5)) + 1
         self.cuadrante = self.cuadrante_raiz(nivel_raiz)
-        self.iteracion()
+        # self.iteracion()
 
     def leer_fichero(self):
         """Lee el fichero introducido por el usuario."""
@@ -61,15 +65,15 @@ class Aplicacion():
             se = Cuadrante.crear_cuadrante(self.matriz[f + 1][c + 1], nivel - 1)
             return Cuadrante.crear_cuadrante(nivel=nivel, nw=nw, ne=ne, sw=sw, se=se)
         else:
-            for x in range(4):
-                nw = self.cuadrante_raiz(nivel - 1)
-                ne = self.cuadrante_raiz(nivel - 1, c=int((pow(2, nivel) / 2)))
-                sw = self.cuadrante_raiz(nivel - 1, f=int((pow(2, nivel) / 2)))
-                se = self.cuadrante_raiz(nivel - 1, c=int((pow(2, nivel) / 2)), f=int((pow(2, nivel) / 2)))
+            nw = self.cuadrante_raiz(nivel - 1, f=f, c=c)
+            ne = self.cuadrante_raiz(nivel - 1, c=int((pow(2, nivel) / 2)) + c)
+            sw = self.cuadrante_raiz(nivel - 1, f=int((pow(2, nivel) / 2)) + f)
+            se = self.cuadrante_raiz(nivel - 1, c=int((pow(2, nivel) / 2) + c), f=int((pow(2, nivel) / 2)) + f)
             return Cuadrante.crear_cuadrante(nivel=nivel, nw=nw, ne=ne, sw=sw, se=se)
 
     def iteracion(self):
         self.cuadrante_raiz.generacion()
+
 
 if __name__ == "__main__":
     app = Aplicacion()
