@@ -19,17 +19,20 @@ class Aplicacion():
         self.cua = 0
         # print(len(self.matriz))
         # print(self.matriz)
-        for line in self.matriz:
-            print(line)
+        # for line in self.matriz:
+        #    print(line)
         self.main()
 
     def main(self):
+        """Metodo main del programa."""
         nivel_raiz = int(pow(len(self.matriz), 0.5)) + 1
         self.cuadrante = self.cuadrante_raiz(nivel_raiz)
         # self.iteracion()
 
     def leer_fichero(self):
-        """Lee el fichero introducido por el usuario."""
+        """Lee el fichero introducido por el usuario. Devuelve una matriz
+        de tamaño la menor potencia de 2 en la que entra el dibujo del fichero,
+        con los valores en cada posicion."""
         try:
             fichero = open(self.fichero, "r")
         except OSError:
@@ -58,6 +61,7 @@ class Aplicacion():
         return matriz
 
     def cuadrante_raiz(self, nivel, f=0, c=0):
+        """Crea el cuadrante raiz de la matriz leida."""
         if nivel == 1:
             nw = Cuadrante.crear_cuadrante(self.matriz[f][c], nivel - 1)
             ne = Cuadrante.crear_cuadrante(self.matriz[f][c + 1], nivel - 1)
@@ -72,6 +76,10 @@ class Aplicacion():
             return Cuadrante.crear_cuadrante(nivel=nivel, nw=nw, ne=ne, sw=sw, se=se)
 
     def iteracion(self):
+        """Genera una nueva iteracion del juego."""
+        """comprobar que los cuadrantes lmites poblacion 0
+        sino expandir -> añade caudrantes vacios a los lados
+        """
         self.cuadrante_raiz.generacion()
 
 
