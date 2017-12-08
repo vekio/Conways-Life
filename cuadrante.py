@@ -44,12 +44,54 @@ class Cuadrante:
             return self.resultado
         # Sino se realiza el cálculo, se almacena en resultado y se devuelve
         else:
-            # Antes comprobamos si hace falta expandir
-            self.expandir()
-            print("calcular el resultado")
-            return self.resultado
+            # Los niveles 0 y 1 no se realizan calculos
+            if self.nivel == 0 or self.nivel == 1:
+                pass
+            elif self.nivel == 2:
+                self.generacion2()
+            else:
+                # Antes comprobamos si hace falta expandir
+                self.expandir()
+                print("calcular el resultado")
+                return self.resultado
 
     def expandir(self):
         """Comprueba si la poblacion de celulas vivas se encuentra
         en el subcuadrante central del nivel superior."""
+        expandir = False
+        while expandir:
+            if self.nw.nw.poblacion != 0 or self.nw.ne.poblacion != 0 or self.nw.sw.poblacion != 0:
+                expandir = True
+            elif self.ne.nw.poblacion != 0 or self.ne.ne.poblacion != 0 or self.ne.sw.poblacion != 0:
+                expandir = True
+            elif self.sw.nw.poblacion != 0 or self.sw.sw.poblacion != 0 or self.ne.se.poblacion != 0:
+                expandir = True
+            elif self.se.ne.poblacion != 0 or self.se.sw.poblacion != 0 or self.se.se.poblacion != 0:
+                expandir = True
+            # No hace falta expandir, devolvemos -1
+            return -1
+        # Hace falta expandir
+        ### crear uno vacio de un nivel superior
+        ### añadir en las posiciones centrales el que invoca el metodo
+        expandido = self.crear_vacio(self.nivel + 1)
         pass
+
+        def crear_vacio(self, nivel):
+            """Crea un arbol vacio del nivel especificado"""
+            valor = "."
+            if nivel == 1:
+                nw = self.crear_cuadrante(valor, nivel - 1)
+                ne = self.crear_cuadrante(valor, nivel - 1)
+                sw = self.crear_cuadrante(valor, nivel - 1)
+                se = self.crear_cuadrante(valor, nivel - 1)
+                return self.crear_cuadrante(nivel=nivel, nw=nw, ne=ne, sw=sw, se=se)
+            else:
+                nw = self.crear_vacio(nivel - 1)
+                ne = self.crear_vacio(nivel - 1)
+                sw = self.crear_vacio(nivel - 1)
+                se = self.crear_vacio(nivel - 1)
+                return Cuadrante.crear_cuadrante(nivel=nivel, nw=nw, ne=ne, sw=sw, se=se)
+
+        def generacion2(self):
+            """Aplica directamente las reglas de vida"""
+            pass
