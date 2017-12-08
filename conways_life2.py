@@ -27,7 +27,8 @@ class Aplicacion():
         """Metodo main del programa."""
         nivel_raiz = int(pow(len(self.matriz), 0.5)) + 1
         self.cuadrante = self.cuadrante_raiz(nivel_raiz)
-        # self.iteracion()
+        for x in self.iteraciones:
+            self.iteracion()
 
     def leer_fichero(self):
         """Lee el fichero introducido por el usuario. Devuelve una matriz
@@ -80,7 +81,8 @@ class Aplicacion():
         """comprobar que los cuadrantes lmites poblacion 0
         sino expandir -> añade caudrantes vacios a los lados
         """
-        self.cuadrante_raiz.generacion()
+        expandido = self.cuadrante_raiz.expandir()
+        expandido.generacion()
 
 
 if __name__ == "__main__":
