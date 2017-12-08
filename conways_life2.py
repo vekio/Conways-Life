@@ -4,7 +4,7 @@
 # Alberto Castañeiras - albcast
 # Jorge Chana - jorchan
 
-
+from time import time
 from cuadrante import Cuadrante
 import sys
 
@@ -16,7 +16,9 @@ class Aplicacion():
         self.fichero = sys.argv[1]
         self.iteraciones = int(sys.argv[2])
         self.matriz = self.leer_fichero()
-        self.cua = 0
+
+        self.tiempo_inicial = time()
+        self.tiempo_final = 0
         # print(len(self.matriz))
         # print(self.matriz)
         # for line in self.matriz:
@@ -27,7 +29,11 @@ class Aplicacion():
         """Metodo main del programa."""
         nivel_raiz = int(pow(len(self.matriz), 0.5)) + 1
         self.cuadrante = self.cuadrante_raiz(nivel_raiz)
-        # self.iteracion()
+        for x in range(self.iteraciones):
+            print("--iteracion ", x)
+            self.iteracion()
+        self.tiempo_final = time()
+        self.imprimir()
 
     def leer_fichero(self):
         """Lee el fichero introducido por el usuario. Devuelve una matriz
@@ -63,11 +69,27 @@ class Aplicacion():
     def cuadrante_raiz(self, nivel, f=0, c=0):
         """Crea el cuadrante raiz de la matriz leida."""
         if nivel == 1:
-            nw = Cuadrante.crear_cuadrante(self.matriz[f][c], nivel - 1)
-            ne = Cuadrante.crear_cuadrante(self.matriz[f][c + 1], nivel - 1)
-            sw = Cuadrante.crear_cuadrante(self.matriz[f + 1][c], nivel - 1)
-            se = Cuadrante.crear_cuadrante(self.matriz[f + 1][c + 1], nivel - 1)
-            return Cuadrante.crear_cuadrante(nivel=nivel, nw=nw, ne=ne, sw=sw, se=se)
+            if self.matriz[f][c] == "X":
+                poblacion = 1
+            else:
+                poblacion = 0
+            nw = Cuadrante.crear_cuadrante(nivel - 1, poblacion)
+            if self.matriz[f][c + 1] == "X":
+                poblacion = 1
+            else:
+                poblacion = 0
+            ne = Cuadrante.crear_cuadrante(nivel - 1, poblacion)
+            if self.matriz[f + 1][c] == "X":
+                poblacion = 1
+            else:
+                poblacion = 0
+            sw = Cuadrante.crear_cuadrante(nivel - 1, poblacion)
+            if self.matriz[f + 1][c + 1] == "X":
+                poblacion = 1
+            else:
+                poblacion = 0
+            se = Cuadrante.crear_cuadrante(nivel - 1, poblacion)
+            return Cuadrante.crear_cuadrante(nivel, nw=nw, ne=ne, sw=sw, se=se)
         else:
             nw = self.cuadrante_raiz(nivel - 1, f=f, c=c)
             ne = self.cuadrante_raiz(nivel - 1, c=int((pow(2, nivel) / 2)) + c)
@@ -77,10 +99,16 @@ class Aplicacion():
 
     def iteracion(self):
         """Genera una nueva iteracion del juego."""
-        """comprobar que los cuadrantes lmites poblacion 0
-        sino expandir -> añade caudrantes vacios a los lados
-        """
-        self.cuadrante_raiz.generacion()
+        expandido = self.cuadrante.expandir()
+        self.cuadrante = expandido.generacion()
+
+    def imprimir(self):
+        """Imprime por pantalla los resultados y guarda en un
+        fichero la ultima iteración realizada."""
+        print("{} iteraciones".format(self.iteraciones))
+        print("{} celdas vivas".format(self.cuadrante.poblacion))
+        print("Dimensiones {} x {}".format(pow(2, self.cuadrante.nivel), pow(2, self.cuadrante.nivel)))
+        print("{:.2f} segundos".format(self.tiempo_final - self.tiempo_inicial))
 
 
 if __name__ == "__main__":
