@@ -16,6 +16,7 @@ class Aplicacion():
         self.fichero = sys.argv[1]
         self.iteraciones = int(sys.argv[2])
         self.matriz = self.leer_fichero()
+        self.matriz_aux = list()
 
         self.tiempo_inicial = time()
         self.tiempo_final = 0
@@ -30,7 +31,7 @@ class Aplicacion():
         nivel_raiz = int(pow(len(self.matriz), 0.5)) + 1
         self.cuadrante = self.cuadrante_raiz(nivel_raiz)
         for x in range(self.iteraciones):
-            print("--iteracion ", x)
+            # print("--iteracion ", x)
             self.iteracion()
         self.tiempo_final = time()
         self.imprimir()
@@ -99,8 +100,14 @@ class Aplicacion():
 
     def iteracion(self):
         """Genera una nueva iteracion del juego."""
-        expandido = self.cuadrante.expandir()
-        self.cuadrante = expandido.generacion()
+        # expandido = self.cuadrante.expandir()
+        # print(expandido.nivel)
+        # print(expandido.poblacion)
+        self.cuadrante = self.cuadrante.expandir().generacion()
+        self.matriz_aux = [([""] * (pow(2, self.cuadrante.nivel))) for i in range(pow(2, self.cuadrante.nivel))]
+        self.valores(self.cuadrante)
+        #for line in self.matriz_aux:
+        #    print(line)
 
     def imprimir(self):
         """Imprime por pantalla los resultados y guarda en un
@@ -109,6 +116,22 @@ class Aplicacion():
         print("{} celdas vivas".format(self.cuadrante.poblacion))
         print("Dimensiones {} x {}".format(pow(2, self.cuadrante.nivel), pow(2, self.cuadrante.nivel)))
         print("{:.2f} segundos".format(self.tiempo_final - self.tiempo_inicial))
+
+    def valores(self, arbol, f=0, c=0):
+        """Imprime los valores por pantalla"""
+        if arbol.nivel == 0:
+            if arbol.poblacion == 1:
+                valor = "X"
+            else:
+                valor = "."
+            self.matriz_aux[f][c] = valor
+            return 1
+        else:
+            self.valores(arbol.nw, f=f, c=c)
+            self.valores(arbol.ne, f=f, c=c + int((pow(2, arbol.nivel) / 2)))
+            self.valores(arbol.sw, f=f + int((pow(2, arbol.nivel) / 2)), c=c)
+            self.valores(arbol.se, f=f + int((pow(2, arbol.nivel) / 2)), c=c + int((pow(2, arbol.nivel) / 2)))
+            return 1
 
 
 if __name__ == "__main__":
