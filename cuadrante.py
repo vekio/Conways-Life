@@ -124,6 +124,7 @@ class Cuadrante:
                 return self.resultado
             else:
                 # generacion de 4 subcudrantes de un nivel menos
+                """
                 n00 = Cuadrante.crear_cuadrante(nivel=self.nivel - 2, nw=self.nw.nw.se, ne=self.nw.ne.sw, sw=self.nw.sw.ne, se=self.nw.se.nw)
                 n01 = Cuadrante.crear_cuadrante(nivel=self.nivel - 2, nw=self.nw.ne.se, ne=self.ne.nw.sw, sw=self.nw.se.ne, se=self.ne.sw.nw)
                 n02 = Cuadrante.crear_cuadrante(nivel=self.nivel - 2, nw=self.ne.nw.se, ne=self.ne.ne.sw, sw=self.ne.sw.ne, se=self.ne.se.nw)
@@ -135,6 +136,19 @@ class Cuadrante:
                 n20 = Cuadrante.crear_cuadrante(nivel=self.nivel - 2, nw=self.sw.nw.se, ne=self.sw.ne.sw, sw=self.sw.sw.ne, se=self.sw.se.nw)
                 n21 = Cuadrante.crear_cuadrante(nivel=self.nivel - 2, nw=self.sw.ne.se, ne=self.se.nw.sw, sw=self.sw.se.ne, se=self.se.sw.nw)
                 n22 = Cuadrante.crear_cuadrante(nivel=self.nivel - 2, nw=self.se.nw.se, ne=self.se.ne.sw, sw=self.se.sw.ne, se=self.se.se.nw)
+                """
+                n00 = self.nw.generacion()
+                n01 = Cuadrante.crear_cuadrante(nivel=self.nivel - 1, nw=self.nw.ne, ne=self.ne.nw, sw=self.nw.se, se=self.ne.sw).generacion()
+                n02 = self.ne.generacion()
+
+                n10 = Cuadrante.crear_cuadrante(nivel=self.nivel - 1, nw=self.nw.sw, ne=self.nw.se, sw=self.sw.nw, se=self.sw.ne).generacion()
+                n11 = Cuadrante.crear_cuadrante(nivel=self.nivel - 1, nw=self.nw.se, ne=self.ne.sw, sw=self.sw.ne, se=self.se.nw).generacion()
+                n12 = Cuadrante.crear_cuadrante(nivel=self.nivel - 1, nw=self.ne.sw, ne=self.ne.se, sw=self.se.nw, se=self.se.ne).generacion()
+
+                n20 = self.sw.generacion()
+                n21 = Cuadrante.crear_cuadrante(nivel=self.nivel - 1, nw=self.sw.ne, ne=self.se.nw, sw=self.sw.se, se=self.se.sw).generacion()
+                n22 = self.se.generacion()
+
 
                 m00 = Cuadrante.crear_cuadrante(nivel=self.nivel - 1, nw=n00, ne=n01, sw=n10, se=n11)
                 m01 = Cuadrante.crear_cuadrante(nivel=self.nivel - 1, nw=n01, ne=n02, sw=n11, se=n12)
