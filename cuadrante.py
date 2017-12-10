@@ -9,7 +9,7 @@ from tabla_dispersion import TablaDispCer
 
 class Cuadrante:
     """Clase Cuadrante para el juego Conway's life."""
-    tabla_dispersion = TablaDispCer()
+    tabla_dispersion = TablaDispCer(m=1)
 
     def __init__(self, nivel=None, poblacion=None,
                  nw=None, ne=None, se=None, sw=None):
@@ -26,30 +26,27 @@ class Cuadrante:
                         nw=None, ne=None, se=None, sw=None):
         """Crea Cuadrante cuadrantes unicos"""
         # Comprobar que no existe otro igual
-        clave = Cuadrante.hash_cuad(nw, ne, sw, se)
-        cuad = Cuadrante.tabla_dispersion.buscar(clave)
-        if cuad is None:
-            if nivel == 0:
-                print("> soy un cuadrante de nivel ", nivel,"poblacion ", poblacion)
-                Cuadrante.tabla_dispersion.insertar(clave, cls(0, poblacion))
-                return cls(0, poblacion)
-            else:
+        if nivel == 0:
+            # print("> soy un cuadrante de nivel ", nivel,"poblacion ", poblacion)
+            return cls(0, poblacion)
+        else:
+            clave = Cuadrante.hash_cuad(nw, ne, sw, se)
+            cuad = Cuadrante.tabla_dispersion.buscar(clave)
+            if cuad is None:
                 for x in nw, ne, sw, se:
                     poblacion = x.poblacion + poblacion
                 # if nivel == 3:
                 #    print(poblacion)
-                print("> soy un cuadrante de nivel ", nivel,"poblacion ", poblacion)
+                # print("> soy un cuadrante de nivel ", nivel,"poblacion ", poblacion)
                 Cuadrante.tabla_dispersion.insertar(clave, cls(nivel, poblacion, nw=nw, ne=ne, sw=sw, se=se))
                 return cls(nivel, poblacion, nw=nw, ne=ne, sw=sw, se=se)
-        else:
-            return cuad
+            else:
+                return cuad
 
     @classmethod
     def hash_cuad(cls, nw, ne, sw, se):
         h = hash(nw) + 11 * hash(ne) + 101 * hash(sw) + 1007 * hash(se)
-        h = h ^ (h >> 20) ^ (h >> 12)
-        h = h ^ (h >> 7) ^ (h >> 4)
-        return h
+        return int(h)
 
     def generacion2(self):
         """Crea la siguiente generacion de celulas vivas/muertas para un nivel 2."""

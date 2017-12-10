@@ -8,6 +8,7 @@ from time import time
 from cuadrante import Cuadrante
 import sys
 
+viva = "X"
 
 class Aplicacion():
 
@@ -33,7 +34,12 @@ class Aplicacion():
         for x in range(self.iteraciones):
             # print("--iteracion ", x)
             self.iteracion()
+        # for line in self.matriz_aux:
+        #    print(line)
         self.tiempo_final = time()
+        self.limites()
+        for line in self.matriz_aux:
+            print(line)
         self.imprimir()
 
     def leer_fichero(self):
@@ -116,6 +122,7 @@ class Aplicacion():
         print("{} celdas vivas".format(self.cuadrante.poblacion))
         print("Dimensiones {} x {}".format(pow(2, self.cuadrante.nivel), pow(2, self.cuadrante.nivel)))
         print("{:.2f} segundos".format(self.tiempo_final - self.tiempo_inicial))
+        self.fichero_salida()
 
     def valores(self, arbol, f=0, c=0):
         """Imprime los valores por pantalla"""
@@ -132,6 +139,83 @@ class Aplicacion():
             self.valores(arbol.sw, f=f + int((pow(2, arbol.nivel) / 2)), c=c)
             self.valores(arbol.se, f=f + int((pow(2, arbol.nivel) / 2)), c=c + int((pow(2, arbol.nivel) / 2)))
             return 1
+
+    def limites(self):
+        """Comprueba filas y columnas con celdas vivas
+        y añade/elimina filas/columnas."""
+        filas = len(self.matriz_aux)
+        columnas = len(self.matriz_aux)
+
+        flimites = [False] * filas
+        climites = [False] * columnas
+        for n in range(filas):
+            for m in range(columnas):
+                if self.matriz_aux[n][m] == viva:
+                    flimites[n] = True
+                    break
+        for m in range(columnas):
+            for n in range(filas):
+                if self.matriz_aux[n][m] == viva:
+                    climites[m] = True
+                    break
+
+        if flimites.index(True) == 0:
+            pass
+        elif flimites.index(True) > 0:
+            for x in range(flimites.index(True) - 2):
+                filas -= 1
+                self.matriz_aux.pop(0)
+        if flimites[::-1].index(True) == 2:
+            pass
+        elif flimites[::-1].index(True) < 2:
+            for x in range(2 - flimites[::-1].index(True)):
+                self.matriz_aux.insert(filas, ["."] * columnas)
+                filas += 1
+        elif flimites[::-1].index(True) > 2:
+            for x in range(flimites[::-1].index(True) - 2):
+                self.matriz_aux.pop(filas - 1)
+                filas -= 1
+
+        if climites.index(True) == 2:
+            pass
+        elif climites.index(True) < 2:
+            for x in range(2 - climites.index(True)):
+                columnas += 1
+                for fila in self.matriz_aux:
+                    fila.insert(0, ".")
+        elif climites.index(True) > 2:
+            for x in range(climites.index(True) - 2):
+                columnas -= 1
+                for fila in self.matriz_aux:
+                    fila.pop(0)
+        if climites[::-1].index(True) == 2:
+            pass
+        elif climites[::-1].index(True) < 2:
+            for x in range(2 - climites[::-1].index(True)):
+                for fila in self.matriz_aux:
+                    fila.insert(columnas, ".")
+                columnas += 1
+        elif climites[::-1].index(True) > 2:
+            for x in range(climites[::-1].index(True) - 2):
+                for fila in self.matriz_aux:
+                    fila.pop(columnas - 1)
+                columnas -= 1
+
+    def fichero_salida(self):
+        """Escribe la ultima iteración en el fichero dado por el usuario"""
+        nombre = input("Escriba el nombre del fichero de salida: ")
+        try:
+            fichero = open(nombre, "w")
+        except OSError:
+            sys.exit("Algo salio mal al guardar '{}'".format(nombre))
+        else:
+            fichero.write(str(len(self.matriz_aux) - 2) + "\n")
+            fichero.write(str(len(self.matriz_aux) - 2))
+            for n in range(2, len(self.matriz_aux) - 2):
+                fichero.write("\n")
+                for m in range(2, len(self.matriz_aux) - 2):
+                    fichero.write(self.matriz_aux[n][m])
+            fichero.close()
 
 
 if __name__ == "__main__":
