@@ -120,7 +120,7 @@ class Aplicacion():
         fichero la ultima iteración realizada."""
         print("{} iteraciones".format(self.iteraciones))
         print("{} celdas vivas".format(self.cuadrante.poblacion))
-        print("Dimensiones {} x {}".format(pow(2, self.cuadrante.nivel), pow(2, self.cuadrante.nivel)))
+        print("Dimensiones {} x {}".format(len(self.matriz_aux), len(self.matriz_aux[0])))
         print("{:.2f} segundos".format(self.tiempo_final - self.tiempo_inicial))
         self.fichero_salida()
 
@@ -162,41 +162,27 @@ class Aplicacion():
         if flimites.index(True) == 0:
             pass
         elif flimites.index(True) > 0:
-            for x in range(flimites.index(True) - 2):
+            for x in range(flimites.index(True)):
                 filas -= 1
                 self.matriz_aux.pop(0)
-        if flimites[::-1].index(True) == 2:
+        if flimites[::-1].index(True) == 0:
             pass
-        elif flimites[::-1].index(True) < 2:
-            for x in range(2 - flimites[::-1].index(True)):
-                self.matriz_aux.insert(filas, ["."] * columnas)
-                filas += 1
-        elif flimites[::-1].index(True) > 2:
-            for x in range(flimites[::-1].index(True) - 2):
+        elif flimites[::-1].index(True) > 0:
+            for x in range(flimites[::-1].index(True)):
                 self.matriz_aux.pop(filas - 1)
                 filas -= 1
 
-        if climites.index(True) == 2:
+        if climites.index(True) == 0:
             pass
-        elif climites.index(True) < 2:
-            for x in range(2 - climites.index(True)):
-                columnas += 1
-                for fila in self.matriz_aux:
-                    fila.insert(0, ".")
-        elif climites.index(True) > 2:
-            for x in range(climites.index(True) - 2):
+        elif climites.index(True) > 0:
+            for x in range(climites.index(True)):
                 columnas -= 1
                 for fila in self.matriz_aux:
                     fila.pop(0)
-        if climites[::-1].index(True) == 2:
+        if climites[::-1].index(True) == 0:
             pass
-        elif climites[::-1].index(True) < 2:
-            for x in range(2 - climites[::-1].index(True)):
-                for fila in self.matriz_aux:
-                    fila.insert(columnas, ".")
-                columnas += 1
-        elif climites[::-1].index(True) > 2:
-            for x in range(climites[::-1].index(True) - 2):
+        elif climites[::-1].index(True) > 0:
+            for x in range(climites[::-1].index(True)):
                 for fila in self.matriz_aux:
                     fila.pop(columnas - 1)
                 columnas -= 1
@@ -209,11 +195,11 @@ class Aplicacion():
         except OSError:
             sys.exit("Algo salio mal al guardar '{}'".format(nombre))
         else:
-            fichero.write(str(len(self.matriz_aux) - 2) + "\n")
-            fichero.write(str(len(self.matriz_aux) - 2))
-            for n in range(2, len(self.matriz_aux) - 2):
+            fichero.write(str(len(self.matriz_aux)) + "\n")
+            fichero.write(str(len(self.matriz_aux[0])))
+            for n in range(len(self.matriz_aux)):
                 fichero.write("\n")
-                for m in range(2, len(self.matriz_aux) - 2):
+                for m in range(len(self.matriz_aux[0])):
                     fichero.write(self.matriz_aux[n][m])
             fichero.close()
 
