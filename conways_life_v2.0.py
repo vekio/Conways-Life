@@ -9,6 +9,8 @@ from cuadrante import Cuadrante
 import sys
 
 viva = "X"
+muerta = "."
+
 
 class Aplicacion():
 
@@ -17,14 +19,8 @@ class Aplicacion():
         self.fichero = sys.argv[1]
         self.iteraciones = int(sys.argv[2])
         self.matriz = self.leer_fichero()
-        self.matriz_aux = list()
-
         self.tiempo_inicial = time()
         self.tiempo_final = 0
-        # print(len(self.matriz))
-        # print(self.matriz)
-        # for line in self.matriz:
-        #    print(line)
         self.main()
 
     def main(self):
@@ -32,14 +28,13 @@ class Aplicacion():
         nivel_raiz = int(pow(len(self.matriz), 0.5)) + 1
         self.cuadrante = self.cuadrante_raiz(nivel_raiz)
         for x in range(self.iteraciones):
-            # print("--iteracion ", x)
             self.iteracion()
-        # for line in self.matriz_aux:
-        #    print(line)
         self.tiempo_final = time()
+
+        # Matriz auxiliar para guardar los valores resultantes de la ultima iteracion realizada
+        self.matriz_aux = [([""] * (pow(2, self.cuadrante.nivel))) for i in range(pow(2, self.cuadrante.nivel))]
+        self.valores(self.cuadrante)
         self.limites()
-        for line in self.matriz_aux:
-            print(line)
         self.imprimir()
 
     def leer_fichero(self):
@@ -62,36 +57,36 @@ class Aplicacion():
                 c = pow(2, int(pow(columnas, 0.5)) + 1)
 
             while filas != c:
-                matriz.insert(filas, ["."] * columnas)
+                matriz.insert(filas, [muerta] * columnas)
                 filas += 1
 
             while columnas != c:
                 for fila in matriz:
-                    fila.insert(columnas, ".")
+                    fila.insert(columnas, muerta)
                 columnas += 1
             fichero.close()
 
         return matriz
 
     def cuadrante_raiz(self, nivel, f=0, c=0):
-        """Crea el cuadrante raiz de la matriz leida."""
+        """Crea el cuadrante raiz de la matriz leida en el fichero."""
         if nivel == 1:
-            if self.matriz[f][c] == "X":
+            if self.matriz[f][c] == viva:
                 poblacion = 1
             else:
                 poblacion = 0
             nw = Cuadrante.crear_cuadrante(nivel - 1, poblacion)
-            if self.matriz[f][c + 1] == "X":
+            if self.matriz[f][c + 1] == viva:
                 poblacion = 1
             else:
                 poblacion = 0
             ne = Cuadrante.crear_cuadrante(nivel - 1, poblacion)
-            if self.matriz[f + 1][c] == "X":
+            if self.matriz[f + 1][c] == viva:
                 poblacion = 1
             else:
                 poblacion = 0
             sw = Cuadrante.crear_cuadrante(nivel - 1, poblacion)
-            if self.matriz[f + 1][c + 1] == "X":
+            if self.matriz[f + 1][c + 1] == viva:
                 poblacion = 1
             else:
                 poblacion = 0
@@ -105,19 +100,12 @@ class Aplicacion():
             return Cuadrante.crear_cuadrante(nivel=nivel, nw=nw, ne=ne, sw=sw, se=se)
 
     def iteracion(self):
-        """Genera una nueva iteracion del juego."""
-        # expandido = self.cuadrante.expandir()
-        # print(expandido.nivel)
-        # print(expandido.poblacion)
+        """Genera 2^(n-2) iteraciones como marca la etapa 4 de la practica."""
         self.cuadrante = self.cuadrante.expandir().generacion()
-        self.matriz_aux = [([""] * (pow(2, self.cuadrante.nivel))) for i in range(pow(2, self.cuadrante.nivel))]
-        self.valores(self.cuadrante)
-        #for line in self.matriz_aux:
-        #    print(line)
 
     def imprimir(self):
-        """Imprime por pantalla los resultados y guarda en un
-        fichero la ultima iteración realizada."""
+        """Imprime por pantalla los resultados y guarda en un fichero los valores
+        de la ultima iteración realizada."""
         print("{} iteraciones".format(self.iteraciones))
         print("{} celdas vivas".format(self.cuadrante.poblacion))
         print("Dimensiones {} x {}".format(len(self.matriz_aux), len(self.matriz_aux[0])))
@@ -125,12 +113,13 @@ class Aplicacion():
         self.fichero_salida()
 
     def valores(self, arbol, f=0, c=0):
-        """Imprime los valores por pantalla"""
+        """Transforma la poblacion de los nodos de nivel 0 en vivas("X") o muertas(".").
+        Lo almacena en una matriz, segun la posicion del nodo dentro del arbol."""
         if arbol.nivel == 0:
             if arbol.poblacion == 1:
-                valor = "X"
+                valor = viva
             else:
-                valor = "."
+                valor = muerta
             self.matriz_aux[f][c] = valor
             return 1
         else:
@@ -141,8 +130,7 @@ class Aplicacion():
             return 1
 
     def limites(self):
-        """Comprueba filas y columnas con celdas vivas
-        y añade/elimina filas/columnas."""
+        """Elimina de la matriz las filas y columnas con todas las celdas muertas."""
         filas = len(self.matriz_aux)
         columnas = len(self.matriz_aux)
 
@@ -188,7 +176,7 @@ class Aplicacion():
                 columnas -= 1
 
     def fichero_salida(self):
-        """Escribe la ultima iteración en el fichero dado por el usuario"""
+        """Guarda la última iteración en el fichero"""
         nombre = input("Escriba el nombre del fichero de salida: ")
         try:
             fichero = open(nombre, "w")
