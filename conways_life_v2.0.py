@@ -18,6 +18,7 @@ class Aplicacion():
     def __init__(self):
         self.fichero = sys.argv[1]
         self.iteraciones = int(sys.argv[2])
+        self.iteraciones_aprox = 0
         self.matriz = self.leer_fichero()
         self.tiempo_inicial = time()
         self.tiempo_final = 0
@@ -25,15 +26,24 @@ class Aplicacion():
 
     def main(self):
         """Metodo main del programa."""
-        nivel_raiz = int(pow(len(self.matriz), 0.5)) + 1
+        cociente = len(self.matriz)
+        nivel_raiz = 0
+        while cociente != 1:
+            cociente = cociente / 2
+            nivel_raiz += 1
         self.cuadrante = self.cuadrante_raiz(nivel_raiz)
+
         for x in range(self.iteraciones):
             self.iteracion()
+            if self.iteraciones_aprox >= self.iteraciones:
+                break
         self.tiempo_final = time()
 
         # Matriz auxiliar para guardar los valores resultantes de la ultima iteracion realizada
         self.matriz_aux = [([""] * (pow(2, self.cuadrante.nivel))) for i in range(pow(2, self.cuadrante.nivel))]
         self.valores(self.cuadrante)
+        for line in self.matriz_aux:
+            print(line)
         self.limites()
         self.imprimir()
 
@@ -56,42 +66,22 @@ class Aplicacion():
             else:
                 c = pow(2, int(pow(columnas, 0.5)) + 1)
 
-            while filas != c:
-                matriz.insert(filas, [muerta] * columnas)
-                filas += 1
+            matriz_aux = [([muerta] * c) for i in range(c)]
+            for n in range(filas):
+                for m in range(columnas):
+                    matriz_aux[n][m] = matriz[n][m]
 
-            while columnas != c:
-                for fila in matriz:
-                    fila.insert(columnas, muerta)
-                columnas += 1
-            fichero.close()
-
-        return matriz
+        return matriz_aux
 
     def cuadrante_raiz(self, nivel, f=0, c=0):
         """Crea el cuadrante raiz de la matriz leida en el fichero."""
-        if nivel == 1:
+        if nivel == 0:
             if self.matriz[f][c] == viva:
                 poblacion = 1
             else:
                 poblacion = 0
-            nw = Cuadrante.crear_cuadrante(nivel - 1, poblacion)
-            if self.matriz[f][c + 1] == viva:
-                poblacion = 1
-            else:
-                poblacion = 0
-            ne = Cuadrante.crear_cuadrante(nivel - 1, poblacion)
-            if self.matriz[f + 1][c] == viva:
-                poblacion = 1
-            else:
-                poblacion = 0
-            sw = Cuadrante.crear_cuadrante(nivel - 1, poblacion)
-            if self.matriz[f + 1][c + 1] == viva:
-                poblacion = 1
-            else:
-                poblacion = 0
-            se = Cuadrante.crear_cuadrante(nivel - 1, poblacion)
-            return Cuadrante.crear_cuadrante(nivel, nw=nw, ne=ne, sw=sw, se=se)
+
+            return Cuadrante.crear_cuadrante(nivel, poblacion)
         else:
             nw = self.cuadrante_raiz(nivel - 1, f=f, c=c)
             ne = self.cuadrante_raiz(nivel - 1, c=int((pow(2, nivel) / 2)) + c)
@@ -101,12 +91,15 @@ class Aplicacion():
 
     def iteracion(self):
         """Genera 2^(n-2) iteraciones como marca la etapa 4 de la practica."""
-        self.cuadrante = self.cuadrante.expandir().generacion()
+        self.cuadrante = self.cuadrante.expandir()
+        self.iteraciones_aprox += pow(2, (self.cuadrante.nivel - 2))
+        self.cuadrante = self.cuadrante.generacion()
 
     def imprimir(self):
         """Imprime por pantalla los resultados y guarda en un fichero los valores
         de la ultima iteración realizada."""
         print("{} iteraciones".format(self.iteraciones))
+        print("{} iteraciones calculadas".format(self.iteraciones_aprox))
         print("{} celdas vivas".format(self.cuadrante.poblacion))
         print("Dimensiones {} x {}".format(len(self.matriz_aux), len(self.matriz_aux[0])))
         print("{:.2f} segundos".format(self.tiempo_final - self.tiempo_inicial))

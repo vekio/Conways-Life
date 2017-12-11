@@ -40,6 +40,7 @@ class TablaDispCer(object):
         Devuelve el cuadrante si lo encuentra o None si no esta dentro."""
         i = self.indice(clave)
         s = self.salto(clave)
+        # print(self.tabla)
         while True:
             if self.tabla[i] is None:
                 break

@@ -109,7 +109,9 @@ class Cuadrante:
         # Sino se realiza el cálculo, se almacena en resultado y lo devuelve
         else:
             # Los niveles 0 y 1 no se realizan calculos
-            if self.nivel == 2:
+            if self.nivel == 0 or self.nivel == 1:
+                print("no pinto nada")
+            elif self.nivel == 2:
                 # Generacion de un cuadrante de nivel 2
                 self.resultado = self.generacion2()
                 return self.resultado
@@ -127,7 +129,6 @@ class Cuadrante:
                 n21 = Cuadrante.crear_cuadrante(nivel=self.nivel - 1, nw=self.sw.ne, ne=self.se.nw, sw=self.sw.se, se=self.se.sw).generacion()
                 n22 = self.se.generacion()
 
-
                 m00 = Cuadrante.crear_cuadrante(nivel=self.nivel - 1, nw=n00, ne=n01, sw=n10, se=n11)
                 m01 = Cuadrante.crear_cuadrante(nivel=self.nivel - 1, nw=n01, ne=n02, sw=n11, se=n12)
                 m10 = Cuadrante.crear_cuadrante(nivel=self.nivel - 1, nw=n10, ne=n11, sw=n20, se=n21)
@@ -143,21 +144,20 @@ class Cuadrante:
                 return self.resultado
 
     def expandir(self):
-        """Comprueba si la poblacion de celulas vivas se encuentra
-        en el sub-subcuadrante central del nivel raiz."""
+        """Comprueba si la poblacion de celulas vivas se encuentra en el sub-subcuadrante central del nivel raiz."""
         sub_po = self.nw.se.se.poblacion + self.ne.sw.sw.poblacion + self.sw.ne.ne.poblacion + self.se.nw.nw.poblacion
         if sub_po == self.poblacion:
             # No hace falta expandir
             return self
         # Hace falta expandir
-        nw = Cuadrante.crear_cuadrante(nivel=self.nivel, nw=Cuadrante.crear_vacio(self.nivel - 1), ne=Cuadrante.crear_vacio(self.nivel - 1), sw=Cuadrante.crear_vacio(self.nivel - 1), se=self.nw)
-        ne = Cuadrante.crear_cuadrante(nivel=self.nivel, nw=Cuadrante.crear_vacio(self.nivel - 1), ne=Cuadrante.crear_vacio(self.nivel - 1), sw=self.ne, se=Cuadrante.crear_vacio(self.nivel - 1))
-        sw = Cuadrante.crear_cuadrante(nivel=self.nivel, nw=Cuadrante.crear_vacio(self.nivel - 1), ne=self.sw, sw=Cuadrante.crear_vacio(self.nivel - 1), se=Cuadrante.crear_vacio(self.nivel - 1))
-        se = Cuadrante.crear_cuadrante(nivel=self.nivel, nw=self.se, ne=Cuadrante.crear_vacio(self.nivel - 1), sw=Cuadrante.crear_vacio(self.nivel - 1), se=Cuadrante.crear_vacio(self.nivel - 1))
-        expandido = Cuadrante.crear_cuadrante(nivel=self.nivel + 1, nw=nw, ne=ne, sw=sw, se=se)
-        expandido = expandido.expandir()
-
-        return expandido
+        else:
+            nw = Cuadrante.crear_cuadrante(nivel=self.nivel, nw=Cuadrante.crear_vacio(self.nivel - 1), ne=Cuadrante.crear_vacio(self.nivel - 1), sw=Cuadrante.crear_vacio(self.nivel - 1), se=self.nw)
+            ne = Cuadrante.crear_cuadrante(nivel=self.nivel, nw=Cuadrante.crear_vacio(self.nivel - 1), ne=Cuadrante.crear_vacio(self.nivel - 1), sw=self.ne, se=Cuadrante.crear_vacio(self.nivel - 1))
+            sw = Cuadrante.crear_cuadrante(nivel=self.nivel, nw=Cuadrante.crear_vacio(self.nivel - 1), ne=self.sw, sw=Cuadrante.crear_vacio(self.nivel - 1), se=Cuadrante.crear_vacio(self.nivel - 1))
+            se = Cuadrante.crear_cuadrante(nivel=self.nivel, nw=self.se, ne=Cuadrante.crear_vacio(self.nivel - 1), sw=Cuadrante.crear_vacio(self.nivel - 1), se=Cuadrante.crear_vacio(self.nivel - 1))
+            expandido = Cuadrante.crear_cuadrante(nivel=self.nivel + 1, nw=nw, ne=ne, sw=sw, se=se)
+            expandido = expandido.expandir()
+            return expandido
 
     @classmethod
     def crear_vacio(cls, nivel):
